@@ -137,6 +137,26 @@ Severity bands: LOW <10 · MEDIUM ≥10 · HIGH ≥25 · CRITICAL ≥45 · EXTRE
   same zero-false-positive signal without root privileges).
 - Lab-only by design; hard blocks are simulate-mode by default.
 
+## Deploy it live
+
+**One-click (Render):** push/Fork this repo, then go to
+[dashboard.render.com](https://dashboard.render.com) → **New → Web Service** →
+connect your GitHub → pick this repo. Render reads [`render.yaml`](render.yaml):
+Python 3.13, installs deps, runs `python main.py`, health-checks `/api/summary`,
+and publishes the dashboard on its assigned `PORT`. You get a public URL like
+`https://chimeramesh-sentinel.onrender.com`.
+
+- Free instances **sleep after 15 min idle**; the first request wakes them (~30s).
+- On Render's shared host the **privileged trap ports (21/23) may not bind** —
+  the detector skips them gracefully and stays on 3306/445/6379 (still 3 ports,
+  scan correlation still fires). The dashboard, decoys, and protected service
+  are unaffected.
+- Only the dashboard port is public; decoy ports stay internal to the box —
+  point the simulators at `127.0.0.1` from the Render **Shell** tab, or expose
+  more ports on a paid plan.
+
+Also works as-is on **Railway** (`railway up`) and **Fly.io** (`fly launch`).
+
 ## Deployment notes
 
 ### GitHub

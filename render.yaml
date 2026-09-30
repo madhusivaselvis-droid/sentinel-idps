@@ -1,0 +1,15 @@
+services:
+  # One always-on VM running the whole Sentinel system (dashboard, decoys,
+  # protected service, trap ports). Render free web services sleep after
+  # 15 min idle — a keep-alive ping or paid instance keeps decoys live.
+  - type: web
+    name: chimeramesh-sentinel
+    runtime: python
+    plan: free
+    rootDir: sentinel
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    healthCheckPath: /api/summary
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.13"
